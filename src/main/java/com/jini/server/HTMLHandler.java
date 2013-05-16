@@ -42,7 +42,7 @@ public class HTMLHandler extends ResourceHandler {
 					fileModTs.put(resource.getFile().getAbsolutePath(),
 							lastModified);
 					return super.getResource(File.separator + tempDir.getName()
-							+ File.separator + path);
+							+ File.separator + path.substring(1));
 				} else {
 
 				}
