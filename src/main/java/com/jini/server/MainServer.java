@@ -8,6 +8,8 @@ import java.io.File;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -36,6 +38,7 @@ public class MainServer extends JFrame {
 		JButton browseButton = new JButton("Browse");
 		final JButton findButton = new JButton("Start");
 		JButton cancelButton = new JButton("Close");
+		JButton staticBuildButton = new JButton("Build Static");
 		final JTextArea jTextArea = new JTextArea();
 		jTextArea.setWrapStyleWord(true);
 		MessageBox.setTextArea(jTextArea);
@@ -58,6 +61,27 @@ public class MainServer extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
+			}
+		});
+		staticBuildButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final String dir = textField.getText();
+				try {
+					Thread t = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								new Exporter().exportStatic(dir);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}							
+						}
+					});
+					t.start();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		findButton.addActionListener(new ActionListener() {
@@ -92,10 +116,11 @@ public class MainServer extends JFrame {
 								HandlerCollection handler = new HandlerCollection();
 								handler.addHandler(customResourceHandler);
 								handler.addHandler(context);
-								server.setHandler(customResourceHandler);								
+								server.setHandler(customResourceHandler);
 								server.start();
-								MessageBox.addMessage("Started Server on port 9090");
-								server.join();								
+								MessageBox
+										.addMessage("Started Server on port 9090");
+								server.join();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -116,7 +141,7 @@ public class MainServer extends JFrame {
 
 		SequentialGroup col1 = layout.createSequentialGroup()
 				.addComponent(label).addComponent(textField)
-				.addComponent(browseButton);		
+				.addComponent(browseButton);
 
 		jTextArea.setPreferredSize(new Dimension(200, 200));
 
@@ -124,7 +149,8 @@ public class MainServer extends JFrame {
 				jTextArea);
 
 		SequentialGroup col3 = layout.createSequentialGroup()
-				.addComponent(findButton).addComponent(cancelButton);
+				.addComponent(findButton).addComponent(cancelButton)
+				.addComponent(staticBuildButton);
 
 		layout.setHorizontalGroup(layout.createParallelGroup().addGroup(col1)
 				.addGroup(col2).addGroup(col3));
@@ -136,14 +162,15 @@ public class MainServer extends JFrame {
 				jTextArea);
 
 		ParallelGroup rrow3 = layout.createParallelGroup()
-				.addComponent(findButton).addComponent(cancelButton);
+				.addComponent(findButton).addComponent(cancelButton)
+				.addComponent(staticBuildButton);
 
 		layout.setVerticalGroup(layout.createSequentialGroup().addGroup(rrow1)
 				.addGroup(rrow2).addGroup(rrow3));
 
 		pack();
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//		setResizable(false);
+		// setResizable(false);
 	}
 
 	/**
