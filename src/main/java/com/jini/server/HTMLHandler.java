@@ -41,8 +41,9 @@ public class HTMLHandler extends ResourceHandler {
 					FileUtils.writeToFile(file, parse);
 					fileModTs.put(resource.getFile().getAbsolutePath(),
 							lastModified);
-					return super.getResource(File.separator + tempDir.getName()
-							+ File.separator + path);
+					System.out.println(path);
+					System.out.println(tempDir.getName());
+					return super.getResource("/" + tempDir.getName() + path);
 				} else {
 
 				}
