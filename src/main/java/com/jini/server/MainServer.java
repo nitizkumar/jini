@@ -27,7 +27,10 @@ public class MainServer extends JFrame {
 
 	private Server server;
 
-	public MainServer() {
+	private String initialDir;
+
+	public MainServer(String initialDir) {
+		this.initialDir = initialDir;
 		initialize();
 	}
 
@@ -43,7 +46,11 @@ public class MainServer extends JFrame {
 		jTextArea.setWrapStyleWord(true);
 		MessageBox.setTextArea(jTextArea);
 		setTitle("Jini");
-
+		System.out.println("MainServer.initialize()"+ this.initialDir);
+		if (this.initialDir != null) {
+			textField.setText(initialDir);
+			System.out.println(initialDir);
+		}
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		browseButton.addActionListener(new ActionListener() {
@@ -75,7 +82,7 @@ public class MainServer extends JFrame {
 								new Exporter().exportStatic(dir);
 							} catch (Exception e) {
 								e.printStackTrace();
-							}							
+							}
 						}
 					});
 					t.start();
@@ -104,7 +111,7 @@ public class MainServer extends JFrame {
 							try {
 								WebAppContext context = new WebAppContext();
 								context.setDescriptor("./WEB-INF/web.xml");
-								context.setResourceBase("./");
+								context.setResourceBase("./webapp");
 								context.setContextPath("/jini");
 
 								String text = textField.getText();
@@ -178,6 +185,11 @@ public class MainServer extends JFrame {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		String initialDir = null;
+		if (args.length != 0) {
+			initialDir = args[0];
+		}
+		final String dir = initialDir;
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -186,7 +198,7 @@ public class MainServer extends JFrame {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				new MainServer().setVisible(true);
+				new MainServer(dir).setVisible(true);
 			}
 		});
 	}

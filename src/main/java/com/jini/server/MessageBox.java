@@ -12,6 +12,7 @@ public class MessageBox {
 
 	public static synchronized void addMessage(String message) {
 		jTextArea.setText(jTextArea.getText() + "\n" + message);
+		System.out.println(message);
 	}
 
 }

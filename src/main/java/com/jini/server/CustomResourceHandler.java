@@ -17,6 +17,7 @@ public class CustomResourceHandler extends AbstractHandler {
 	private File dir = null;
 	private WebAppContext context;
 	private HTMLHandler htmlHandler;
+	private JavascriptHandler jsHandler;
 
 	public CustomResourceHandler(String directory) {
 		dir = new File(directory);
@@ -24,6 +25,7 @@ public class CustomResourceHandler extends AbstractHandler {
 			throw new IllegalArgumentException("Invalid Directory");
 		new File(dir, ".work").mkdir();
 		htmlHandler = new HTMLHandler();
+		jsHandler = new JavascriptHandler();
 	}
 
 	@Override
@@ -34,10 +36,16 @@ public class CustomResourceHandler extends AbstractHandler {
 		if (path.contains("/jini/")) {
 			return;
 		}
-		if (path.endsWith(".html")) {			
-			htmlHandler.setTempDir(new File(dir,".work"));
+		if (path.endsWith(".html")) {
+			htmlHandler.setTempDir(new File(dir, ".work"));
 			htmlHandler.setResourceBase(dir.getAbsolutePath());
 			htmlHandler.handle(path, arg1, arg2, arg3);
+			return;
+		}
+		if (path.endsWith(".js")) {			
+			jsHandler.setTempDir(new File(dir, ".work"));
+			jsHandler.setResourceBase(dir.getAbsolutePath());
+			jsHandler.handle(path, arg1, arg2, arg3);
 			return;
 		}
 
@@ -46,7 +54,7 @@ public class CustomResourceHandler extends AbstractHandler {
 		resourceHandler.setResourceBase(dir.getAbsolutePath());
 		resourceHandler.handle(path, arg1, arg2, arg3);
 
-//		System.out.println(path);
+		// System.out.println(path);
 	}
 
 }
