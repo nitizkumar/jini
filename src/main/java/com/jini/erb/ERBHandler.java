@@ -1,5 +1,3 @@
 package com.jini.erb;
 
-public class ERBHandler {
-
-}
+public class ERBHandler {}

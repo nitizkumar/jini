@@ -143,6 +143,9 @@ public class Helper {
 
 	public String jspExpression(String lineText, String code) {
 		getErrorChecker().checkJavaCodeIsNotEmpty(lineText, "=", code);
+		final String[] parts = code.split("\\n", 2);
+		if (parts.length>1)  // parts will never have more than 2
+			return "<%= " + parts[0] + " %>\n" + parts[1]+"\n";
 		return "<%= " + code + " %>";
 	}
 
@@ -218,16 +221,16 @@ public class Helper {
 			return DOCTYPE_HTML;
 		}
 		// TODO: This regex is from the Ruby implementation, and could be updated for Java.
-//		Pattern pattern = Pattern.compile("(\\d(?:\\.\\d)?)?[\\s]*([a-z]*)",
-//				Pattern.CASE_INSENSITIVE);
+		//		Pattern pattern = Pattern.compile("(\\d(?:\\.\\d)?)?[\\s]*([a-z]*)",
+		//				Pattern.CASE_INSENSITIVE);
 		String version = tokens.length > 0 ? tokens[0] : "";
 		String type = tokens.length > 1 ? tokens[1] : "";
 		if (CharMatcher.JAVA_LETTER.matchesAllOf(version)) {
 			type = version;
 			version = "";
 		}
-//		System.err.println("<" + version + ">");
-//		System.err.println("<" + type + ">");
+		//		System.err.println("<" + version + ">");
+		//		System.err.println("<" + type + ">");
 		// version, type = text.scan(DOCTYPE_REGEX )[0]
 		if (config.isXhtml()) {
 			if ("1.1".equals(version)) {
@@ -282,7 +285,7 @@ public class Helper {
 		String remainingLines = string.substring(string.indexOf("\n"));
 		return "<% if " + condition + " { %>" + remainingLines + "\n<% } %>";
 	}
-	
+
 	private String elseBlock(String string) {
 		String firstLine = string.substring(0, string.indexOf("\n"));
 		if (firstLine.contains("if") && firstLine.replaceAll("\\s", "").startsWith("elseif")) {
@@ -312,7 +315,7 @@ public class Helper {
 		String remainingLines = string.substring(string.indexOf("\n"));
 		return "<% for " + condition + " { %>" + remainingLines + "\n<% } %>";
 	}
-	
+
 	private String groovyEachLoop(String string) {
 		String listName = string.substring(0, string.indexOf(".each")).trim();
 		String remainingLines = string.substring(string.indexOf("\n"));
@@ -349,7 +352,10 @@ public class Helper {
 			attrMap.remove("id");
 		}
 		if (attrMap.containsKey("class")) {
-			classes.add(0, attrMap.get("class").value);
+			String className = attrMap.get("class").value;
+			if (!classes.contains(className)) {
+				classes.add(0, className);
+			}
 			attrMap.remove("class");
 		}
 		getErrorChecker().setCurrentLineNumber(line.lineNumber);

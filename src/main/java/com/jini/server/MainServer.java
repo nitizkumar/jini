@@ -1,15 +1,20 @@
 package com.jini.server;
 
+import com.jini.FileUtils;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.util.Properties;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -17,17 +22,14 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class MainServer extends JFrame {
-
 	private Server server;
-
 	private String initialDir;
+	public static Properties appProp;
 
 	public MainServer(String initialDir) {
 		this.initialDir = initialDir;
@@ -42,47 +44,43 @@ public class MainServer extends JFrame {
 		final JButton findButton = new JButton("Start");
 		JButton cancelButton = new JButton("Close");
 		JButton staticBuildButton = new JButton("Build Static");
-		final JTextArea jTextArea = new JTextArea();
+		JTextArea jTextArea = new JTextArea();
 		jTextArea.setWrapStyleWord(true);
 		MessageBox.setTextArea(jTextArea);
 		setTitle("Jini");
-		System.out.println("MainServer.initialize()"+ this.initialDir);
 		if (this.initialDir != null) {
-			textField.setText(initialDir);
-			System.out.println(initialDir);
+			textField.setText(this.initialDir);
+			System.out.println(this.initialDir);
 		}
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setFileSelectionMode(1);
 
 		browseButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				int returnVal = fc.showOpenDialog(MainServer.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
+				if (returnVal == 0) {
 					File file = fc.getSelectedFile();
 					textField.setText(file.getAbsolutePath());
 				}
 			}
 		});
-
 		cancelButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 		staticBuildButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				final String dir = textField.getText();
 				try {
 					Thread t = new Thread(new Runnable() {
-						@Override
 						public void run() {
 							try {
 								new Exporter().exportStatic(dir);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+							MessageBox
+									.addMessage("Static files created in build folder");
 						}
 					});
 					t.start();
@@ -92,15 +90,14 @@ public class MainServer extends JFrame {
 			}
 		});
 		findButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (server != null) {
+				if (MainServer.this.server != null) {
 					try {
 						textField.setText("");
 						textField.setEnabled(true);
-						server.stop();
+						MainServer.this.server.stop();
 						MessageBox.addMessage("Server stopped");
-						server = null;
+						MainServer.this.server = null;
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -115,19 +112,51 @@ public class MainServer extends JFrame {
 								context.setContextPath("/jini");
 
 								String text = textField.getText();
-								server = new Server(9090);
+								try {
+									String homeDir = System
+											.getProperty("user.home");
+
+									File prefFile = new File(homeDir,
+											"Jini.pref");
+
+									FileUtils.writeToFile(prefFile, text);
+
+									MainServer.appProp = new Properties();
+									File propFile = new File(text,
+											"Jini.properties");
+									if (propFile.exists()) {
+										MainServer.appProp
+												.load(new FileInputStream(
+														propFile));
+									} else {
+										System.err
+												.println("No Properties File present");
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								int portNumber = 9090;
+								while (MainServer.this
+										.isPortOccupied(portNumber)) {
+									portNumber++;
+								}
+								MainServer.this.server = new Server(portNumber);
+
 								CustomResourceHandler customResourceHandler = new CustomResourceHandler(
 										text);
-								context.setServer(server);
-								server.setHandler(context);
+
+								context.setServer(MainServer.this.server);
+
 								HandlerCollection handler = new HandlerCollection();
 								handler.addHandler(customResourceHandler);
-								handler.addHandler(context);
-								server.setHandler(customResourceHandler);
-								server.start();
-								MessageBox
-										.addMessage("Started Server on port 9090");
-								server.join();
+
+								MainServer.this.server
+										.setHandler(customResourceHandler);
+								MainServer.this.server.start();
+								MessageBox.addMessage("Started Server on port "
+										+ portNumber);
+
+								MainServer.this.server.join();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -146,29 +175,30 @@ public class MainServer extends JFrame {
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		SequentialGroup col1 = layout.createSequentialGroup()
+		GroupLayout.SequentialGroup col1 = layout.createSequentialGroup()
 				.addComponent(label).addComponent(textField)
 				.addComponent(browseButton);
 
 		jTextArea.setPreferredSize(new Dimension(200, 200));
 
-		SequentialGroup col2 = layout.createSequentialGroup().addComponent(
-				jTextArea);
+		GroupLayout.SequentialGroup col2 = layout.createSequentialGroup()
+				.addComponent(jTextArea);
 
-		SequentialGroup col3 = layout.createSequentialGroup()
+		GroupLayout.SequentialGroup col3 = layout.createSequentialGroup()
 				.addComponent(findButton).addComponent(cancelButton)
 				.addComponent(staticBuildButton);
 
 		layout.setHorizontalGroup(layout.createParallelGroup().addGroup(col1)
 				.addGroup(col2).addGroup(col3));
 
-		ParallelGroup rrow1 = layout.createParallelGroup().addComponent(label)
-				.addComponent(textField).addComponent(browseButton);
+		GroupLayout.ParallelGroup rrow1 = layout.createParallelGroup()
+				.addComponent(label).addComponent(textField)
+				.addComponent(browseButton);
 
-		ParallelGroup rrow2 = layout.createParallelGroup().addComponent(
-				jTextArea);
+		GroupLayout.ParallelGroup rrow2 = layout.createParallelGroup()
+				.addComponent(jTextArea);
 
-		ParallelGroup rrow3 = layout.createParallelGroup()
+		GroupLayout.ParallelGroup rrow3 = layout.createParallelGroup()
 				.addComponent(findButton).addComponent(cancelButton)
 				.addComponent(staticBuildButton);
 
@@ -176,21 +206,47 @@ public class MainServer extends JFrame {
 				.addGroup(rrow2).addGroup(rrow3));
 
 		pack();
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		// setResizable(false);
+		setDefaultCloseOperation(3);
 	}
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
+	public boolean isPortOccupied(int _port) {
+		boolean portTaken = false;
+		ServerSocket socket = null;
+		try {
+			socket = new ServerSocket(_port);
+
+			return portTaken;
+		} catch (IOException e) {
+			portTaken = true;
+		} finally {
+			if (socket != null) {
+				try {
+					socket.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return portTaken;
+	}
+
 	public static void main(String[] args) throws Exception {
+		try {
+			String homeDir = System.getProperty("user.home");
+			File prefFile = new File(homeDir, "Jini.pref");
+			if (prefFile.exists()) {
+				String readToString = FileUtils.readToString(prefFile);
+				args = new String[] { readToString.trim() };
+			} else {
+				prefFile.createNewFile();
+			}
+		} catch (Exception e) {
+		}
 		String initialDir = null;
 		if (args.length != 0) {
 			initialDir = args[0];
 		}
 		final String dir = initialDir;
-		java.awt.EventQueue.invokeLater(new Runnable() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager
@@ -202,5 +258,4 @@ public class MainServer extends JFrame {
 			}
 		});
 	}
-
 }
