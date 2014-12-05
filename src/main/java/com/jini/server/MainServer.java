@@ -1,6 +1,8 @@
 package com.jini.server;
 
 import com.jini.FileUtils;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
+
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -12,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.util.Properties;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
@@ -22,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -207,6 +211,8 @@ public class MainServer extends JFrame {
 
 		pack();
 		setDefaultCloseOperation(3);
+
+		CustomLogger.getInstance().setLogFile(new File(initialDir, ".work/resource.log"));
 	}
 
 	public boolean isPortOccupied(int _port) {
@@ -258,4 +264,5 @@ public class MainServer extends JFrame {
 			}
 		});
 	}
+
 }

@@ -47,7 +47,8 @@ public class PartialCombiner
         path = path + "_" + trim.substring(0, trim.length() - 1) + ".html";
       }
       File partialFile = new File(this.sourceFile.getParentFile(), path);
-      if (path.contains("_ccCompareComp")) {
+      System.out.println(path);
+      if (path.contains("input")) {
         System.out.println(path);
       }
       if (!partialFile.exists())
