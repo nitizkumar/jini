@@ -24,8 +24,8 @@ HBox translates to a div with all its children having style float:left
 would translate to 
 
 ```html
-<div class="clearfix">
-  <div class="pull-left">first child</div>
+<div class="clearfix"> <!-- this would clear out the float -->
+  <div class="pull-left">first child</div> <!--Note the use of Bootstrap style -->
   <div class="pull-left">second child</div>
   <div class="pull-left">third child</div>
 <hbox>
