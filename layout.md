@@ -28,7 +28,7 @@ would translate to
   <div class="pull-left">first child</div> <!--Note the use of Bootstrap style -->
   <div class="pull-left">second child</div>
   <div class="pull-left">third child</div>
-<hbox>
+</div>
 ```
 
 #### Grid Columns
@@ -52,7 +52,7 @@ would translate to
   <div class="pull-left col-lg-4">second child</div>
   <div class="pull-left col-lg-3">third child</div>
   <div class="pull-left col-lg-2">fourth child</div>
-<hbox>
+</div>
 ```
 
 
@@ -75,5 +75,5 @@ would translate to
 <div class="clearfix"> 
   <div split="1" style="width:33.33%">first child</div>
   <div split="2" style="width:66.67%">second child</div>
-<hbox>
+</div>
 ```
