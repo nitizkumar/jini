@@ -64,7 +64,7 @@ Often you would want to split the columns in proportion rather than grid columns
 ```html
 <hbox>
   <div split="1">first child</div>
-  <div split="1">second child</div>
+  <div split="2">second child</div>
 <hbox>
 ```
 
@@ -72,7 +72,7 @@ would translate to
 
 ```html
 <div class="clearfix"> 
-  <div split="1" style="width:50%">first child</div>
-  <div split="1" style="width:50%">second child</div>
+  <div split="1" style="width:33.33%">first child</div>
+  <div split="2" style="width:66.67%">second child</div>
 <hbox>
 ```
