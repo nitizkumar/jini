@@ -30,3 +30,27 @@ would translate to
   <div class="pull-left">third child</div>
 <hbox>
 ```
+
+#### Grid Columns
+
+Layout markup do support grid concept through bootstrap grid system. you can specify the grid columns using col="x" on a hbox.
+
+```html
+<hbox>
+  <div col="3">first child</div>
+  <div col="4">second child</div>
+  <div col="3">third child</div>
+  <div col="2">fourth child</div>
+<hbox>
+```
+
+would translate to 
+
+```html
+<div class="clearfix"> <!-- this would clear out the float -->
+  <div class="pull-left col-lg-3">first child</div> <!--Note the use of Bootstrap style -->
+  <div class="pull-left col-lg-4">second child</div>
+  <div class="pull-left col-lg-3">third child</div>
+  <div class="pull-left col-lg-2">fourth child</div>
+<hbox>
+```
