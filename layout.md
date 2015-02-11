@@ -54,3 +54,25 @@ would translate to
   <div class="pull-left col-lg-2">fourth child</div>
 <hbox>
 ```
+
+
+#### Split Columns
+
+Often you would want to split the columns in proportion rather than grid columns like 1:2 or 1:1 rather than 6 columns vs 6 column. Layout markup support this kind of split through split="x" attribute, once Jini encounters a split attribute, it would specify width in proportion to all its sibling.. i.e. 1:2 would result in width of 33.33%.
+
+
+```html
+<hbox>
+  <div split="1">first child</div>
+  <div split="1">second child</div>
+<hbox>
+```
+
+would translate to 
+
+```html
+<div class="clearfix"> 
+  <div split="1" style="width:50%">first child</div>
+  <div split="1" style="width:50%">second child</div>
+<hbox>
+```
