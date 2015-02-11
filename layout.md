@@ -102,10 +102,10 @@ would translate to
 <div class="pos-relative">
   <img src="images/sample.png" alt="">
   <div class="nav_arrows pos-absolute">
-      <div class="left_array"></div>
-      <div class="right_array"></div>
+      <div class="pull-left left_array"></div>
+      <div class="pull-left right_array"></div>
   </div>
 </div>
 ```
 
-Point to note is that, the abve syntax only changes the position attribute however the left,top or other positional values would still need to be provided to the child container externally.
+Please note that the above syntax only changes the position attribute however the left,top or other positional values would still need to be provided to the child container externally.
