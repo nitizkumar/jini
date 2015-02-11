@@ -87,7 +87,7 @@ Layers are any container which you would want to be placed over any existing con
 ```html
 <vbox>
   <img src="images/sample.png" alt="">
-    <layer class="slidedots">
+    <layer class="nav_arrows">
       <hbox>
           <div class="left_array"></div>
           <div class="right_array"></div>
@@ -101,7 +101,7 @@ would translate to
 ```html
 <div class="pos-relative">
   <img src="images/sample.png" alt="">
-  <div class="pos-absolute">
+  <div class="nav_arrows pos-absolute">
       <div class="left_array"></div>
       <div class="right_array"></div>
   </div>
