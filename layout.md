@@ -77,3 +77,35 @@ would translate to
   <div split="2" style="width:66.67%">second child</div>
 </div>
 ```
+
+
+#### Layers
+
+Layers are any container which you would want to be placed over any existing container. Common examples would be overlays, or dropdowns. This is achieeved through absolute positioning the child container and relatively positioning the parent. 
+
+
+```html
+<vbox>
+  <img src="images/sample.png" alt="">
+    <layer class="slidedots">
+      <hbox>
+          <div class="left_array"></div>
+          <div class="right_array"></div>
+      </hbox>
+    </layer>
+</vbox>
+```
+
+would translate to 
+
+```html
+<div class="pos-relative">
+  <img src="images/sample.png" alt="">
+  <div class="pos-absolute">
+      <div class="left_array"></div>
+      <div class="right_array"></div>
+  </div>
+</div>
+```
+
+Point to note is that, the abve syntax only changes the position attribute however the left,top or other positional values would still need to be provided to the child container externally.
