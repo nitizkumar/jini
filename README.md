@@ -4,6 +4,10 @@
 
 Jini is a static website generator, some thing to help you create static html website.
 
+#### License
+
+Jini is available under [Apache 2.0](http://opensource.org/licenses/Apache-2.0) license, which essentially means you can use it for commercial project without being bothered by lawyers. 
+
 #### Features
 
 * [HTML include through partial directive] (#partial-html)
@@ -45,6 +49,11 @@ Lorem tags are Jini tags to create placeholder content.
 ```<lorem type="lastName" /> ``` would replace the tag with a random  last name.
 
 ```<lorem type="image" width="100" height="100"/> ``` would replace the tag with an image tag with generated image of mentioned size. 
+
+#### Motivation and History
+
+Jini started out as an internal project inside [Clarice Technology] (http://claricetechnologies.com/) where we needed a simple tool to modularize large HTML projects, since HTML does not support include directive unless clubbed with ASP,JSP,PHP or some other server side technology, we ended up building our own include directive inspired from [Erubis] (http://www.kuwata-lab.com/erubis/). Once we implemented Jini is projects, we kept on adding features based on our own requirement.
+
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/nitizkumar/jini/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
