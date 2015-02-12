@@ -25,7 +25,7 @@ public class HTMLParser {
 	}
 
 	public String parse() throws Exception {
-		
+
 		String resolvePartials = resolvePartials();
 		Document doc = null;
 		boolean partial = false;
@@ -128,7 +128,7 @@ public class HTMLParser {
 	protected void resolveLayout(Document doc, Element element) {
 		if (element.nodeName().equals("vbox")) {
 			Element div = doc.createElement("div");
-			
+
 			div.insertChildren(0, element.children());
 			if (element.hasText()) {
 				div.text(element.text());
@@ -139,6 +139,8 @@ public class HTMLParser {
 			}
 			div.addClass("clearfix");
 			element.replaceWith(div);
+			// Substitute the reference
+			element = div;
 			resolveAlignment(div);
 			if (!div.children().isEmpty()) {
 				for (Element ch : div.children()) {
@@ -157,19 +159,71 @@ public class HTMLParser {
 			}
 			div.addClass("clearfix");
 			element.replaceWith(div);
+			// Substitute the reference
+			element = div;
 			resolveAlignment(div);
 			if (!div.children().isEmpty()) {
 				for (Element ch : div.children()) {
-					resolveLayout(doc, ch);
 					ch.addClass("pull-left");
-					if(ch.hasAttr("col"))
-					{
+					if (ch.hasAttr("col")) {
+						System.out.println(ch.html());
 						String col = ch.attr("col");
 						int parseInt = Integer.parseInt(col);
 						ch.addClass("col-lg-" + parseInt);
 					}
+					resolveLayout(doc, ch);
 				}
 			}
+		} else if (element.nodeName().equals("layer")) {
+			Element div = doc.createElement("div");
+			div.insertChildren(0, element.children());
+			Attributes attributes = element.attributes();
+			for (Attribute attribute : attributes) {
+				div.attr(attribute.getKey(), attribute.getValue());
+			}
+			element.replaceWith(div);
+			// Substitute the reference
+			element = div;
+			div.addClass("pos-absolute");
+			div.parent().addClass("pos-relative");
+			if (!div.children().isEmpty()) {
+				for (Element ch : div.children()) {
+					resolveLayout(doc, ch);
+				}
+			}
+		} else if (element.nodeName().equals("sheet")) {
+			Element div = doc.createElement("div");
+			div.insertChildren(0, element.children());
+			Attributes attributes = element.attributes();
+			for (Attribute attribute : attributes) {
+				div.attr(attribute.getKey(), attribute.getValue());
+			}
+			
+			element.replaceWith(div);
+			// Substitute the reference
+			element = div;
+			div.addClass("tab-pane");
+			if (!div.children().isEmpty()) {
+				for (Element ch : div.children()) {
+					resolveLayout(doc, ch);
+				}
+			}
+
+			element.parent().addClass("tab-content");
+
+			Elements children = element.parent().children();
+			for (Element sibling : children) {
+				if (!sibling.nodeName().equals("sheet") && !sibling.hasClass("tab-pane")) {
+					System.err.println("Sheet Error");
+				}
+				if (!sibling.hasClass("tab-pane")) {
+					sibling.addClass("tab-pane");
+				}
+			}
+			if (!children.get(0).hasClass("active")) {
+				children.get(0).addClass("active");
+			}
+
 		} else {
 			if (!element.children().isEmpty()) {
 				for (Element ch : element.children()) {
@@ -177,19 +231,47 @@ public class HTMLParser {
 				}
 			}
 		}
+		resolveSplits(element);
 	}
 
-	protected void resolveAlignment(Element elem){
-		if(elem.hasAttr("align")){
-			if(elem.attr("align").equals("right")){
-				elem.addClass("pull-right");
+	protected void resolveSplits(Element elem) {
+		if (elem.hasAttr("split")) {
+			Elements children = elem.parent().children();
+			int totalSplit = 0;
+			for (Element element : children) {
+				String attr = element.attr("split");
+				totalSplit += Integer.parseInt(attr);
 			}
-			if(elem.attr("align").equals("center")){
-				elem.addClass("center");
+			for (Element element : children) {
+				String attr = element.attr("split");
+				int sp = Integer.parseInt(attr);
+				double ratio = sp * 100D / totalSplit;
+				element.addClass("split_" + sp + "_" + totalSplit);
+				// System.out.println(element);
+				ratio = Math.round(ratio * 100D) / 100D;
+				element.attr("style", "width:" + ratio + "%");
+				// elem.removeAttr("split");
 			}
 		}
 	}
-	
+
+	protected void resolveAlignment(Element elem) {
+		if (elem.hasAttr("align")) {
+			if (elem.attr("align").equals("right")) {
+				elem.addClass("pull-right");
+				if (elem.hasClass("pull-left")) {
+					elem.removeClass("pull-left");
+				}
+			}
+			if (elem.attr("align").equals("center")) {
+				elem.addClass("center");
+				if (elem.hasClass("pull-left")) {
+					elem.removeClass("pull-left");
+				}
+			}
+		}
+	}
+
 	protected String resolvePartials() throws FileNotFoundException,
 			IOException, Exception {
 		PartialCombiner combiner = new PartialCombiner();
