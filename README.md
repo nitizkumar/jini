@@ -12,6 +12,9 @@ Jini is a static website generator, some thing to help you create static html we
 * [Lorem Tags] (#lorem-tags)
 * [Layout markup](https://github.com/nitizkumar/jini/blob/master/layout.md)  (Early implementation) 
 
+#### Download Link 
+
+The latest version of Jini is 2.1 available [here](http://162.243.44.112/compose/Jini-2.1.jar)
 
 #### Partial html
 
