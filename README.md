@@ -9,7 +9,7 @@ Jini is a static website generator, some thing to help you create static html we
 * [HTML include through partial directive] (#partial-html)
 * CoffeeScript compilation
 * Ajax redirection
-* [Lorem Tags] (#lorem)
+* [Lorem Tags] (#lorem-tags)
 * [Layout markup](https://github.com/nitizkumar/jini/blob/master/layout.md)  (Early implementation) 
 
 
