@@ -16,6 +16,13 @@ Jini is a static website generator, some thing to help you create static html we
 
 The latest version of Jini is 2.1 available [here](http://162.243.44.112/compose/Jini-2.1.jar)
 
+### Using Jini
+
+Jini is a java swing application and would need some form of JVM to run.. Though it is not specific to any particular version of Java, it has not been tested on lower versions of Java.
+
+You can run Jini either by double clicking the jar file if the jar file has execute permission or you can type ```java -jar Jini-2.1.jar``` in to the command line or terminal. This would load up the Jini UI, now point Jini to the folder where your project is located either by pasting the path of the folder in the text input at top or by using browse button. Once you have pointed Jini to correct location, click the start button and this would start the Jini server on port 9090. Your converted html files would now be available at ``http://localhost:9090/index.html``
+
+
 #### Partial html
 
 Partial html files can be included in any html file using ```<%= partial "fragment" %>``` , this would search for a _fragment.html file in the same folder as parent file and replace the directive with content of fragment file.
