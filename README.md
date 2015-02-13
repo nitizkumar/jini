@@ -12,7 +12,7 @@ Jini is available under [Apache 2.0](http://opensource.org/licenses/Apache-2.0) 
 
 * [HTML include through partial directive] (#partial-html)
 * CoffeeScript compilation
-* Ajax redirection
+* [Ajax redirection] (#ajax)
 * [Lorem Tags] (#lorem-tags)
 * [Layout markup](https://github.com/nitizkumar/jini/blob/master/layout.md)  (Early implementation) 
 
