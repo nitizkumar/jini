@@ -40,9 +40,9 @@ When you are developing static html project, you have to deal with ajax calls to
 You should create a file called Jini.properties in the workspace folder. An example property file is provided.
 ```
 API_PATH = /api/
-API_REMOTE_SERVER_URL = http://www.mybackend.com/myapplication/api/
+API_REMOTE_SERVER_URL = http://www.remote-server.com/myapplication/api/
 API_RESOURCE_PATH = /remoteresouce/
-API_REMOTE_RESOURCE_URL = http://www.mybackend.com/myapplication/remoteresource/
+API_REMOTE_RESOURCE_URL = http://www.remote-server.com/myapplication/remoteresource/
 CACHE_SERVER=false
 HEADER_PARAMS=my-token-in-request-header
 ```
