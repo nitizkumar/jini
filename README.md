@@ -33,6 +33,26 @@ Partial html files can be included in any html file using ```<%= partial "fragme
 
 The partial directive supports files in nested folder as well, which should enable users to modularize their html project in different folder. ```<%= partial "mymodule/fragment" %>```  would look for a file _fragment.html in the folder mymodule relative to the file path of including file, however in case the file is not present then Jini would look for the path mymodule/_fragment.html relative to the project root.
 
+#### Ajax
+
+When you are developing static html project, you have to deal with ajax calls to backend server. Normally you can do it using JSONP but if your html and backend are finally going to be co-located then its better to use JSON instead of JSONP. Jini lets you redirect any ajax call on localhost to any host url, this works similar to a proxy server. This enables you to develop html site without running backend server on your system. Jini would cache the response from the server and optionally can serve the cached ajax response allowing you to go offline.
+
+You should create a file called Jini.properties in the workspace folder. An example property file is provided.
+```
+API_PATH = /api/
+API_REMOTE_SERVER_URL = http://www.mybackend.com/myapplication/api/
+API_RESOURCE_PATH = /remoteresouce/
+API_REMOTE_RESOURCE_URL = http://www.mybackend.com/myapplication/remoteresource/
+CACHE_SERVER=false
+HEADER_PARAMS=my-token-in-request-header
+```
+
+```API_PATH``` is a pattern when matched on ajax url the request gets sent to a path specified by ```API_REMOTE_SERVER_URL```, Similarly for resources you can use ```API_RESOURCE_PATH``` and ```API_REMOTE_RESOURCE_URL```.
+
+```CACHE_SERVER``` when set to false would connect to remote server for every request, when turned to true, Jini would serve response from cache.
+
+```HEADER_PARAMS``` is a parameter which would be added to request sent to remote server by Jini. If you have a auth token or session token in request header, you can specify it here. 
+
 
 #### Lorem Tags
 
