@@ -19,6 +19,7 @@ public class CustomResourceHandler
   private WebAppContext context;
   private HTMLHandler htmlHandler;
   private JavascriptHandler jsHandler;
+  private LessHandler lessHandler;
   
   public CustomResourceHandler(String directory)
   {
@@ -29,6 +30,7 @@ public class CustomResourceHandler
     new File(dir, ".work").mkdir();
     this.htmlHandler = new HTMLHandler();
     this.jsHandler = new JavascriptHandler();
+    this.lessHandler = new LessHandler();
   }
   
   public void handle(String path, Request arg1, HttpServletRequest request, HttpServletResponse response)
@@ -55,6 +57,14 @@ public class CustomResourceHandler
       this.jsHandler.handle(path, arg1, request, response);
       return;
     }
+    if (path.endsWith(".css"))
+    {
+      this.lessHandler.setTempDir(new File(dir, ".work"));
+      this.lessHandler.setResourceBase(dir.getAbsolutePath());
+      this.lessHandler.handle(path, arg1, request, response);
+      return;
+    }
+    
     String appPath = (String)MainServer.appProp.get("API_PATH");
     String resourcePath = (String)MainServer.appProp.get("API_RESOURCE_PATH");
     if ((appPath != null) && ((path.contains(appPath)) || (path.contains(resourcePath))))

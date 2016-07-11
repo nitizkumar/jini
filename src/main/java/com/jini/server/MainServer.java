@@ -1,7 +1,6 @@
 package com.jini.server;
 
 import com.jini.FileUtils;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
 import java.awt.Container;
 import java.awt.Dimension;
