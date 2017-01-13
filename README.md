@@ -1,5 +1,7 @@
 # jini
 
+[![Join the chat at https://gitter.im/nitizkumar/jini](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nitizkumar/jini?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 #### What is Jini?
 
 Jini is a static website generator, some thing to help you create static html website.
